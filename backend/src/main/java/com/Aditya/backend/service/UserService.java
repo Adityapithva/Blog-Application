@@ -1,9 +1,6 @@
 package com.Aditya.backend.service;
 
-import com.Aditya.backend.auth.AuthResponse;
-import com.Aditya.backend.auth.CustomUserDetailsService;
-import com.Aditya.backend.auth.JwtProvider;
-import com.Aditya.backend.auth.LoginRequest;
+import com.Aditya.backend.auth.*;
 import com.Aditya.backend.entity.User;
 import com.Aditya.backend.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +53,10 @@ public class UserService {
             throw new BadCredentialsException("invalid username and password");
         }
         return new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+    }
+
+    public User getProfile(){
+        User user = repo.findByEmail(SecurityUtils.getEmail());
+        return user;
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/post")
@@ -18,9 +19,13 @@ public class PostController {
 
     //Create a new post
     @PostMapping("/create")
-    public ResponseEntity<Post> createPost(@RequestBody Post post){
-        Post savedPost = service.createPost(post);
-        return new ResponseEntity<>(savedPost, HttpStatus.CREATED);
+    public ResponseEntity<?> createPost(@RequestBody Post post){
+       try{
+           Post savedPost = service.createPost(post);
+           return new ResponseEntity<>("Post created", HttpStatus.CREATED);
+       }catch(Exception e){
+           return new ResponseEntity<>("Error creating post",HttpStatus.INTERNAL_SERVER_ERROR);
+       }
     }
 
     //All posts of particular user
@@ -42,6 +47,17 @@ public class PostController {
             return new ResponseEntity<>(posts,HttpStatus.OK);
         }catch(RuntimeException e){
             return new ResponseEntity<>("No posts found",HttpStatus.NO_CONTENT);
+        }
+    }
+
+    //Delete a post
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deletePost(@PathVariable String id){
+        try{
+            Optional<Post> deletedPost = service.deletePost(id);
+            return new ResponseEntity<>("Post deleted successful",HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("no post found",HttpStatus.NOT_FOUND);
         }
     }
 }

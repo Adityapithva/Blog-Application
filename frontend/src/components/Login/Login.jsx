@@ -17,7 +17,7 @@ const Login = () => {
             alert(response.data.message);
             nav("/home");
         }catch(err){
-            console.err(err);
+            console.log(err);
         }
     }
     return <>

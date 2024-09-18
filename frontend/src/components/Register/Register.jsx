@@ -22,7 +22,7 @@ const Register = () => {
             email.current.value = '';
             nav("/");
         }catch(err){
-            console.err(err);
+            console.log(err);
         }
     }
     return <>
