@@ -83,4 +83,26 @@ public class PostController {
             return new ResponseEntity<>("error deleting post "+e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    //Like to a post
+    @GetMapping("/like/{postId}")
+    public ResponseEntity<?> likeToPost(@PathVariable String postId){
+        try{
+            service.likeToPost(postId);
+            return new ResponseEntity<>("liked",HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("error liking a post "+e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //Delete a like
+    @DeleteMapping("/like/delete/{postId}/{likeId}")
+    public ResponseEntity<?> deleteLike(@PathVariable String postId,@PathVariable String likeId){
+        try{
+            service.deleteLike(postId,likeId);
+            return new ResponseEntity<>("unliked",HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("error deleting like "+e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

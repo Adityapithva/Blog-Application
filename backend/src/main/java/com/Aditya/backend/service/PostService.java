@@ -2,9 +2,11 @@ package com.Aditya.backend.service;
 
 import com.Aditya.backend.auth.SecurityUtils;
 import com.Aditya.backend.entity.Comments;
+import com.Aditya.backend.entity.Like;
 import com.Aditya.backend.entity.Post;
 import com.Aditya.backend.entity.User;
 import com.Aditya.backend.repository.CommentRepo;
+import com.Aditya.backend.repository.LikeRepo;
 import com.Aditya.backend.repository.PostRepo;
 import com.Aditya.backend.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class PostService {
 
     @Autowired
     private CommentRepo commentRepo;
+
+    @Autowired
+    private LikeRepo likeRepo;
 
     public Post createPost(Post post) {
         User user = userRepo.findByEmail(SecurityUtils.getEmail());
@@ -107,5 +112,28 @@ public class PostService {
         repo.save(post);
         commentRepo.delete(comment);
         return comment;
+    }
+
+    public String likeToPost(String postId){
+        Post post = repo.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+        User user = userRepo.findByEmail(SecurityUtils.getEmail());
+        Like like = new Like();
+        like.setUsername(user.getUsername());
+        if(post.getLikes() == null){
+            post.setLikes(new ArrayList<>());
+        }
+        post.getLikes().add(like);
+        likeRepo.save(like);
+        repo.save(post);
+        return "Liked";
+    }
+
+    public String deleteLike(String postId,String likeId){
+        Post post = repo.findById(postId).orElseThrow(() -> new RuntimeException("post not found"));
+        Like like = likeRepo.findById(likeId).orElseThrow(() -> new RuntimeException("like not found"));
+        post.getLikes().remove(like);
+        repo.save(post);
+        likeRepo.delete(like);
+        return "unliked";
     }
 }

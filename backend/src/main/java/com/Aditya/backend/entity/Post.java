@@ -24,4 +24,6 @@ public class Post {
     private String author;
     @DBRef
     private List<Comments> comments;
+    @DBRef
+    private List<Like> likes;
 }
