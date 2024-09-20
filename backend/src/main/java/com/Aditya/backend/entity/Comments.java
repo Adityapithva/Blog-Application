@@ -4,24 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-import java.util.List;
-
-@Document(collection = "posts")
+@Document(collection = "comments")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Post {
+public class Comments {
     @Id
     private String id;
-    private String title;
     private String content;
-    private List<String> tags;
-    private Date createdAt;
     private String author;
-    @DBRef
-    private List<Comments> comments;
+    private String postId;
 }

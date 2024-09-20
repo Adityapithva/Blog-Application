@@ -1,5 +1,6 @@
 package com.Aditya.backend.controller;
 
+import com.Aditya.backend.entity.Comments;
 import com.Aditya.backend.entity.Post;
 import com.Aditya.backend.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,28 @@ public class PostController {
             return new ResponseEntity<>("Post deleted successful",HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>("no post found",HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //Comment in a post
+    @PostMapping("/comment/{id}")
+    public ResponseEntity<?> addComment(@PathVariable String id, @RequestBody Comments comment){
+        try{
+            service.addComment(id, comment);
+            return new ResponseEntity<>("comment added",HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("error adding comment"+e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //Delete a comment in a post
+    @DeleteMapping("/comment/delete/{postId}/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable String postId,@PathVariable String commentId){
+        try{
+            service.deleteComment(postId,commentId);
+            return new ResponseEntity<>("comment deleted",HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("error deleting post "+e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

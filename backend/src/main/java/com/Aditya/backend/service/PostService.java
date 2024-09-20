@@ -1,8 +1,10 @@
 package com.Aditya.backend.service;
 
 import com.Aditya.backend.auth.SecurityUtils;
+import com.Aditya.backend.entity.Comments;
 import com.Aditya.backend.entity.Post;
 import com.Aditya.backend.entity.User;
+import com.Aditya.backend.repository.CommentRepo;
 import com.Aditya.backend.repository.PostRepo;
 import com.Aditya.backend.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class PostService {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private CommentRepo commentRepo;
 
     public Post createPost(Post post) {
         User user = userRepo.findByEmail(SecurityUtils.getEmail());
@@ -73,6 +78,34 @@ public class PostService {
             throw new RuntimeException("post not found");
         }
         repo.deleteById(id);
+        User user = userRepo.findByEmail(SecurityUtils.getEmail());
+        List<Post> posts = user.getPosts();
+        posts.remove(post);
+        user.setPosts(posts);
+        userRepo.save(user);
         return post;
+    }
+
+    public Comments addComment(String postId,Comments comment){
+        Post post = repo.findById(postId).orElse(null);
+        comment.setPostId(postId);
+        User user = userRepo.findByEmail(SecurityUtils.getEmail());
+        comment.setAuthor(user.getUsername());
+        Comments savedComment = commentRepo.save(comment);
+        if(post.getComments() == null){
+            post.setComments(new ArrayList<>());
+        }
+        post.getComments().add(savedComment);
+        repo.save(post);
+        return savedComment;
+    }
+
+    public Comments deleteComment(String postId,String commentId){
+        Post post = repo.findById(postId).orElse(null);
+        Comments comment = commentRepo.findById(commentId).orElse(null);
+        post.getComments().remove(comment);
+        repo.save(post);
+        commentRepo.delete(comment);
+        return comment;
     }
 }
