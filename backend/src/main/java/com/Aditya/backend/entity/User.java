@@ -10,7 +10,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 @Data
-@NoArgsConstructor@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Document(collection = "user")
 public class User {
     @Id
@@ -20,4 +21,5 @@ public class User {
     private String password;
     @DBRef
     private List<Post> posts;
+    private List<Post> savedPost;
 }

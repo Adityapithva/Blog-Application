@@ -105,4 +105,26 @@ public class PostController {
             return new ResponseEntity<>("error deleting like "+e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    //Save a post
+    @GetMapping("/save/{postId}")
+    public ResponseEntity<?> savePost(@PathVariable String postId){
+        try{
+            Post savedPost = service.savePost(postId);
+            return new ResponseEntity<>("post saved",HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("error saving post",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //Unsave a post
+    @GetMapping("/unsave/{postId}")
+    public ResponseEntity<?> unSavePost(@PathVariable String postId){
+        try{
+            Post unSavedPost = service.unSavePost(postId);
+            return new ResponseEntity<>("post unsaved",HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("error unsaving post",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

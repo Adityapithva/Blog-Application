@@ -136,4 +136,23 @@ public class PostService {
         likeRepo.delete(like);
         return "unliked";
     }
+
+    public Post savePost(String postId){
+        Post post = repo.findById(postId).orElseThrow(() -> new RuntimeException("post not found"));
+        User user = userRepo.findByEmail(SecurityUtils.getEmail());
+        if(user.getSavedPost() == null){
+            user.setSavedPost(new ArrayList<>());
+        }
+        user.getSavedPost().add(post);
+        userRepo.save(user);
+        return post;
+    }
+
+    public Post unSavePost(String postId){
+        Post post = repo.findById(postId).orElseThrow(() -> new RuntimeException("post not found"));
+        User user = userRepo.findByEmail(SecurityUtils.getEmail());
+        user.getSavedPost().remove(post);
+        userRepo.save(user);
+        return post;
+    }
 }
